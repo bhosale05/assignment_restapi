@@ -24,7 +24,7 @@ const userSchema = mongoose.Schema({
         city: String,
         state: String,
         pincode: String,
-        geometry: {
+        location: {
             type: {
                 type: String,
                 default: 'Point'
@@ -33,6 +33,7 @@ const userSchema = mongoose.Schema({
                 type: [Number],
                 index: '2dsphere'
             }
+
         }
     },
     createdAt: {

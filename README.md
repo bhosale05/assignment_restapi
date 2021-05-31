@@ -67,5 +67,4 @@
         
     6. Get all Users sorted by their distance from coordinates : 
         Method : Get,
-        URL :  localhost:3000/users/geo?lan=-80&lat=24&distance=1000
-        
+        URL :  localhost:3000/users/geo?lng=-80&lat=24&distance=1000

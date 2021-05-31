@@ -3,6 +3,7 @@ const router = express.Router();
 const mongoose = require('mongoose')
 const Users = require('../model/user');
 const jwt = require('jsonwebtoken');
+const { collection } = require('../model/user');
 jwtkey = 'jwt';
 
 // Create/register new user API 
@@ -128,7 +129,7 @@ router.get('/sort/', tokenVerify, (req, res) => {
                 });
             }
         }).sort({ createdAt: -1 }).limit(limit).skip(skip)
-    } else{
+    } else {
         Users.find((error, result) => {
             if (error) {
                 console.log(`error : ${error}`);
@@ -144,21 +145,21 @@ router.get('/sort/', tokenVerify, (req, res) => {
     }
 })
 
-
+// get all users sorted by disnatce from 
 router.get('/geo', (req, res) => {
 
     const maxDistance = req.query.distance !== 'undefined' ? req.query.distance : 1009;
-    const lan = req.query.lan !== 'undefined' ? req.query.lan : 80;
+    const lng = req.query.lng !== 'undefined' ? req.query.lng : 80;
     const lat = req.query.lat !== 'undefined' ? req.query.lat : 25;
 
-    const location = {
-        $geometry: {
-            type: "Point",
-            coordinates: [+lan, +lat]
+    Users.find({
+        location: {
+            $near: {
+                $geometry: { type: 'Point', coordinates: [+lng, +lat] },
+                $maxDistance: maxDistance
+            }
         }
-    };
-
-    Users.find({ geo: { $near: location }, $maxDistance : maxDistance }, (err, result) => {
+    }, (err, result) => {
         if (err) {
             console.log(`error : ${err}`);
             res.status(500).json({ error: err });
